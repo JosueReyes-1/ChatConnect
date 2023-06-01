@@ -1,0 +1,45 @@
+service: ChatConnect
+frameworkVersion: '3'
+plugins:
+  - serverless-iam-roles-per-function
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  profile: proyectos
+
+functions:
+  Connect:
+    handler: Connect/handler.handler
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:DescribeTable
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "arn:aws:dynamodb:us-east-1:904968671286:table/websockets"
+    environment:
+      TABLE_NAME: websockets
+  SendMessage:
+    handler: SendMessage/handler.handler
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:DescribeTable
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "arn:aws:dynamodb:us-east-1:904968671286:table/websockets"
+    environment:
+      TABLE_NAME: websockets
+  Disconnect:
+    handler: Disconnect/handler.handler
+  Broadcast:
+    handler: Broadcast/handler.handler
