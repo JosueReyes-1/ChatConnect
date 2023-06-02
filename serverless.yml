@@ -1,5 +1,5 @@
 service: ChatConnect
-frameworkVersion: '3'
+frameworkVersion: "3"
 plugins:
   - serverless-iam-roles-per-function
 provider:
@@ -41,5 +41,18 @@ functions:
       TABLE_NAME: websockets
   Disconnect:
     handler: Disconnect/handler.handler
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:DescribeTable
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "arn:aws:dynamodb:us-east-1:904968671286:table/websockets"
+    environment:
+      TABLE_NAME: websockets
   Broadcast:
     handler: Broadcast/handler.handler

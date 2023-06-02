@@ -1,13 +1,14 @@
 import json
+import boto3
+import os
 
+dynamodb=boto3.client('dynamodb')
 
 def handler(event, context):
-    body = {
-        "message": "Go Serverless v3.0! Your function executed successfully!",
-        "input": event,
-    }
-    print(body)
+    connectionId=event['requestContext']['connectionId']
 
-    response = {"statusCode": 200, "body": json.dumps(body)}
-
-    return response
+    dynamodb.delete_item(
+        TableName=os.environ.get('TABLE_NAME'),
+        Key={'socketId':{'S':connectionId}}
+    )
+    return {}
